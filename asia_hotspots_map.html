@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet@1.9.3/dist/leaflet.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.0/css/all.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.awesome-markers/2.0.2/leaflet.awesome-markers.css"/>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/python-visualization/folium/folium/templates/leaflet.awesome.rotate.min.css"/>
+    
+            <meta name="viewport" content="width=device-width,
+                initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+            <style>
+                #map_0e116b49c799f074a0203163f54c7882 {
+                    position: relative;
+                    width: 100.0%;
+                    height: 100.0%;
+                    left: 0.0%;
+                    top: 0.0%;
+                }
+                .leaflet-container { font-size: 1rem; }
+            </style>
+
+            <style>html, body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+            }
+            </style>
+
+            <style>#map {
+                position:absolute;
+                top:0;
+                bottom:0;
+                right:0;
+                left:0;
+                }
+            </style>
+
+            <script>
+                L_NO_TOUCH = false;
+                L_DISABLE_3D = false;
+            </script>
+
+        
+</head>
+<body>
+    
+    
+        <div style="position: fixed; 
+                    bottom: 50px; right: 50px; width: 320px; height: 340px; 
+                    background-color: white; border:2px solid grey; z-index:9999; 
+                    font-size:12px; padding: 10px; border-radius: 5px; overflow-y: auto;">
+        <p style="margin: 0; font-weight: bold; font-size: 14px;">📍 Risk Zone Legend</p>
+        <hr style="margin: 5px 0;">
+        <p><span style="color: #8B0000; font-weight: bold;">🔴🔴🔴</span> 0-10 km: HIGH CRITICAL RED</p>
+        <p><span style="color: #FF0000; font-weight: bold;">🔴🔴</span> 10-50 km: CRITICAL ZONE</p>
+        <p><span style="color: #FFD700; font-weight: bold;">🟡</span> 50-150 km: MEDIUM RISK</p>
+        <p><span style="color: #90EE90; font-weight: bold;">🟢</span> 150-300 km: LOW RISK</p>
+        <p><span style="color: #00AA00; font-weight: bold;">✅</span> 300+ km: NO RISK</p>
+        <p><span style="color: #00C853; font-weight: bold;">✅</span> No Hotspots: SAFE ZONE</p>
+        <hr style="margin: 5px 0;">
+        <p style="font-size: 11px; margin: 5px 0; font-style: italic;">
+        📊 Enhanced Data from CSV | 🔄 Easily Updatable
+        </p>
+        </div>
+        
+    
+            <div class="folium-map" id="map_0e116b49c799f074a0203163f54c7882" ></div>
+        
+</body>
+<script>
+    
+    
+            var map_0e116b49c799f074a0203163f54c7882 = L.map(
+                "map_0e116b49c799f074a0203163f54c7882",
+                {
+                    center: [18.9582, 72.8321],
+                    crs: L.CRS.EPSG3857,
+                    ...{
+  "zoom": 4,
+  "zoomControl": true,
+  "preferCanvas": false,
+}
+
+                }
+            );
+
+            
+
+        
+    
+            var tile_layer_a2ce381fa1dc262d4731f8688be00eb9 = L.tileLayer(
+                "https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+                {
+  "minZoom": 0,
+  "maxZoom": 19,
+  "maxNativeZoom": 19,
+  "noWrap": false,
+  "attribution": "\u0026copy; \u003ca href=\"https://www.openstreetmap.org/copyright\"\u003eOpenStreetMap\u003c/a\u003e contributors",
+  "subdomains": "abc",
+  "detectRetina": false,
+  "tms": false,
+  "opacity": 1,
+}
+
+            );
+        
+    
+            tile_layer_a2ce381fa1dc262d4731f8688be00eb9.addTo(map_0e116b49c799f074a0203163f54c7882);
+        
+    
+            var marker_f1b998febdb6b1d44c18c76f2b2178fb = L.marker(
+                [18.9582, 72.8321],
+                {
+}
+            ).addTo(map_0e116b49c799f074a0203163f54c7882);
+        
+    
+            var icon_4d774fc61f16bcc175b2adc7fb70d627 = L.AwesomeMarkers.icon(
+                {
+  "markerColor": "blue",
+  "iconColor": "white",
+  "icon": "info-sign",
+  "prefix": "glyphicon",
+  "extraClasses": "fa-rotate-0",
+}
+            );
+        
+    
+        var popup_56bb549daaa6bf27f7aa8c33742fa106 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_5d15f064c7251b467785c28f348bf6ce = $(`<div id="html_5d15f064c7251b467785c28f348bf6ce" style="width: 100.0%; height: 100.0%;">Your Location</div>`)[0];
+                popup_56bb549daaa6bf27f7aa8c33742fa106.setContent(html_5d15f064c7251b467785c28f348bf6ce);
+            
+        
+
+        marker_f1b998febdb6b1d44c18c76f2b2178fb.bindPopup(popup_56bb549daaa6bf27f7aa8c33742fa106)
+        ;
+
+        
+    
+    
+            marker_f1b998febdb6b1d44c18c76f2b2178fb.bindTooltip(
+                `<div>
+                     Your Starting Point
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+    
+                marker_f1b998febdb6b1d44c18c76f2b2178fb.setIcon(icon_4d774fc61f16bcc175b2adc7fb70d627);
+            
+    
+            var circle_marker_64d520275e42cf3041b427d3c1ac3a75 = L.circleMarker(
+                [19.076, 72.8777],
+                {"bubblingMouseEvents": true, "color": "#FF0000", "dashArray": null, "dashOffset": null, "fill": true, "fillColor": "#FF0000", "fillOpacity": 0.7, "fillRule": "evenodd", "lineCap": "round", "lineJoin": "round", "opacity": 1.0, "radius": 50, "stroke": true, "weight": 2}
+            ).addTo(map_0e116b49c799f074a0203163f54c7882);
+        
+    
+        var popup_a829103507ae2d3d72e9fe906c5b2735 = L.popup({
+  "maxWidth": "100%",
+});
+
+        
+            
+                var html_a43164454815ed6f07cfcad8e5285d20 = $(`<div id="html_a43164454815ed6f07cfcad8e5285d20" style="width: 100.0%; height: 100.0%;">             <b>Mumbai-Pune Expressway</b><br>             Distance: 13.95 km<br>             Risk Level: CRITICAL ZONE<br>             Accidents: 6745<br>             Fatality Rate: None<br>             Emergency Response: None min<br>             Recommendation: ⚠️ HIGH ALERT: Avoid this area if possible. If necessary, drive extremely carefully             </div>`)[0];
+                popup_a829103507ae2d3d72e9fe906c5b2735.setContent(html_a43164454815ed6f07cfcad8e5285d20);
+            
+        
+
+        circle_marker_64d520275e42cf3041b427d3c1ac3a75.bindPopup(popup_a829103507ae2d3d72e9fe906c5b2735)
+        ;
+
+        
+    
+    
+            circle_marker_64d520275e42cf3041b427d3c1ac3a75.bindTooltip(
+                `<div>
+                     Mumbai-Pune Expressway - 🔴🔴 CRITICAL ZONE
+                 </div>`,
+                {
+  "sticky": true,
+}
+            );
+        
+</script>
+</html>
