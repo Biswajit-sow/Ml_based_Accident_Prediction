@@ -1,70 +1,336 @@
-# Getting Started with Create React App
+# AI Traffic Accident Severity Prediction System
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## 📋 Project Overview
 
-## Available Scripts
+**AI Traffic Accident Severity Prediction** is an intelligent system designed to predict the **severity level** of traffic accidents in real-time based on multiple environmental, vehicular, and driver-related factors. The system leverages machine learning algorithms to assess accident risk and provide actionable safety recommendations.
 
-In the project directory, you can run:
+### 🎯 Objective
 
-### `npm start`
+Develop a production-ready ML-powered application that:
+- Predicts accident severity (Minor, Serious, Fatal)
+- Analyzes distance-based hotspot risk zones
+- Provides real-time travel recommendations
+- Integrates spatial analysis for accident-prone locations across Asia
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+***
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## 🏗️ System Architecture
 
-### `npm test`
+```
+┌─────────────────────────────────────────────────────────────┐
+│              AI Traffic Accident Prediction                  │
+├─────────────────────────────────────────────────────────────┤
+│                                                               │
+│  Frontend (React.js)          Backend (Flask)                │
+│  ├─ PredictionForm            ├─ ML Model (joblib)           │
+│  ├─ ResultPage                ├─ Feature Encoding            │
+│  └─ ResultCard                ├─ Hotspot Analysis            │
+│                                └─ Risk Scoring (1-5 scale)   │
+│                                                               │
+│  Database: CSV-based Hotspot Data (Asia)                     │
+│  Model: RandomForest / XGBoost Classification                │
+└─────────────────────────────────────────────────────────────┘
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+***
 
-### `npm run build`
+## 💾 Dataset & Preprocessing
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### **Data Source**
+- Real-world traffic accident records from India
+- ~10,000 accident records with 25+ attributes
+- Geospatial data for 25+ accident hotspots across Asia
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### **Key Features**
+| Category | Features |
+|----------|----------|
+| **Temporal** | Hour, Day of Week, Rush Hour Flag, Weekend Flag |
+| **Environmental** | Weather, Road Type, Road Condition |
+| **Vehicle** | Vehicle Type, Vehicle Condition |
+| **Driver** | Age, License Status, Experience (years), Speed Habit |
+| **Safety** | Lighting Conditions, Traffic Control, Alcohol Involvement |
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### **Data Preprocessing Steps**
+1. **Cleaning:** Removed duplicates, handled missing values
+2. **Feature Engineering:** Created risk scores (1-5 scale) for subjective features
+3. **Encoding:** Categorical variables mapped to numerical codes
+4. **Validation:** Removed outcome variables (Speed Limit, Casualties, Fatalities) to prevent data leakage
 
-### `npm run eject`
+**Output:** Severity Classification
+- **0 = Minor** → Low injury accidents
+- **1 = Serious** → Moderate to serious injuries
+- **2 = Fatal** → Fatal accidents
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+***
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## 🧪 Experiments & Model Training
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### **Feature Scoring System**
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+#### Experience Score (1-5 Scale)
+- **5:** < 6 months → Extreme Risk
+- **4:** 6-12 months → Very High Risk
+- **3:** 1-2 years → High Risk
+- **2:** 2-5 years → Medium Risk
+- **1:** 5+ years → Low Risk
 
-## Learn More
+#### Weather Risk Score (1-5 Scale)
+- **5:** Storm, Tornado, Hurricane → Extreme Risk
+- **4:** Heavy Rain, Snow, Hail → Very High Risk
+- **3:** Rain, Fog, Mist → High Risk
+- **2:** Cloudy, Drizzle → Medium Risk
+- **1:** Clear, Sunny → Low Risk
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+#### Driver Age Risk Score (1-5 Scale)
+- **5:** < 20 years → Very High Risk
+- **4:** 20-25 or > 70 → High Risk
+- **3:** 60-70 → Medium Risk
+- **1:** 25-60 → Low Risk
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+#### Speed Habit Score (1-5 Scale)
+- **1:** < 60 km/h → Safe/Moderate
+- **2:** 60-80 km/h → Slightly Risky
+- **3:** 80-100 km/h → Risky
+- **4:** > 100 km/h → Very Risky
 
-### Code Splitting
+#### Vehicle Condition Score (1-5 Scale)
+- **5:** Poor/Bad/Terrible → Extreme Risk
+- **3:** Average/Medium/OK → Medium Risk
+- **1:** Good/Excellent → Low Risk
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### **Model Selection & Comparison**
 
-### Analyzing the Bundle Size
+| Model | Type | Advantages |
+|-------|------|-----------|
+| **RandomForest** | Ensemble | Fast inference, handles non-linear patterns |
+| **XGBoost** | Gradient Boosting | Superior performance on imbalanced data |
+| **Logistic Regression** | Linear | Baseline for comparison |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+**Selected Model:** RandomForest/XGBoost (Best performance on validation set)
 
-### Making a Progressive Web App
+### **Hyperparameter Tuning**
+- GridSearchCV for parameter optimization
+- Cross-validation (5-fold) for robust evaluation
+- Class weight balancing for imbalanced dataset
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+***
 
-### Advanced Configuration
+## 🔧 Technical Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### **Backend**
+- **Framework:** Flask (Python)
+- **ML Libraries:** scikit-learn, XGBoost, joblib
+- **Data Processing:** pandas, NumPy
+- **Geospatial:** Distance-based hotspot analysis
+- **API:** RESTful with CORS support
 
-### Deployment
+### **Frontend**
+- **Framework:** React.js
+- **Styling:** Bootstrap 5 + Custom CSS
+- **State Management:** React Hooks (useState)
+- **Routing:** React Router v6
+- **HTTP Client:** Axios
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### **Deployment**
+- **Backend:** Flask development server (Production-ready with gunicorn)
+- **Frontend:** Node.js + npm
+- **Database:** CSV-based (Scalable to PostgreSQL)
 
-### `npm run build` fails to minify
+***
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 📊 Key Features
+
+### **1. ML-Based Severity Prediction**
+- Real-time accident risk classification
+- Probability scoring (0-100%)
+- Risk level mapping (Low/Medium/High)
+
+### **2. Distance-Based Hotspot Analysis**
+- Proximity-based risk assessment
+- 5-zone classification system:
+  - **0-10 km:** 🔴🔴🔴 High Critical Red Zone
+  - **10-50 km:** 🔴🔴 Critical Zone
+  - **50-150 km:** 🟡 Medium Risk Zone
+  - **150-300 km:** 🟢 Low Risk Zone
+  - **300+ km:** ✅ No Risk
+
+### **3. Combined Recommendations**
+- ML prediction + Hotspot risk integration
+- Travel permission system (ALLOWED/NOT ALLOWED)
+- Real-time safety alerts
+
+### **4. Interactive Hotspot Map**
+- Geospatial visualization of accident zones
+- Dynamic map generation with Folium
+- Risk zone color-coding
+
+***
+
+## 🚀 API Endpoints
+
+### **Prediction Endpoint**
+```
+POST /predict
+```
+**Input:** Accident parameters (time, location, weather, driver info, etc.)  
+**Output:** Severity prediction + probability + hotspot analysis
+
+### **Hotspot Analysis**
+```
+POST /hotspot_analysis
+```
+**Input:** Latitude, Longitude, Radius (km)  
+**Output:** Distance-based risk classification + nearby hotspots
+
+### **Map Generation**
+```
+POST /generate_hotspot_map
+```
+**Output:** Interactive HTML map with accident zones
+
+***
+
+## 📈 Model Evaluation Metrics
+
+- **Precision:** Class-wise precision for each severity level
+- **Recall:** Sensitivity for identifying high-risk scenarios
+- **F1-Score:** Balanced performance metric
+- **ROC-AUC:** Classification performance across thresholds
+- **Confusion Matrix:** True/False positives and negatives
+
+***
+
+## 🔐 Data Quality & NaN Prevention
+
+### **Robust Probability Handling**
+- Safe extraction from predict_proba() output
+- NaN detection and fallback to 0.0
+- Validation of array shape before indexing
+
+### **Frontend Safety Checks**
+- Probability formatter handles undefined/null values
+- Graceful fallback to "N/A" for invalid data
+- Type conversion validation
+
+***
+
+## 📁 Project Structure
+
+```
+ai-traffic-prediction/
+├── backend/
+│   ├── models/
+│   │   ├── best_model.joblib
+│   │   ├── severity_mapping.joblib
+│   │   └── feature_names.joblib
+│   ├── data/
+│   │   └── processed/
+│   │       └── asia_accident_hotspots_enhanced.csv
+│   ├── prediction_api.py
+│   └── spatial_analysis.py
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── PredictionForm.js
+│   │   │   ├── ResultPage.js
+│   │   │   └── ResultCard.js
+│   │   └── pages/
+│   └── package.json
+└── README.md
+```
+
+***
+
+## 🎯 Usage
+
+### **1. Start Backend**
+```bash
+cd backend
+python prediction_api.py
+# Server runs on http://127.0.0.1:5000
+```
+
+### **2. Start Frontend**
+```bash
+cd frontend
+npm install
+npm start
+# App runs on http://localhost:3000
+```
+
+### **3. Make Predictions**
+1. Fill in accident details in the form
+2. Submit for real-time prediction
+3. View severity level + probability + recommendations
+4. Analyze hotspot risks on interactive map
+
+***
+
+## 🔍 Example Prediction Input
+
+```json
+{
+  "datetime": "2025-11-10T13:00",
+  "State Name": "Maharashtra",
+  "City Name": "Mumbai",
+  "Driver Age": 35,
+  "Driver License Status": "Valid",
+  "driver_experience": "8 years",
+  "driver_speed_habit": 45,
+  "vehicle_condition": "good",
+  "Weather Conditions": "Clear",
+  "Road Type": "Urban Road",
+  "Road Condition": "Dry",
+  "Lighting Conditions": "Bright",
+  "Traffic Control Presence": "Lights",
+  "Vehicle Type Involved": "Car",
+  "alcohol_flag": 0
+}
+```
+
+**Output:**
+```json
+{
+  "prediction_summary": {
+    "severity": "Minor",
+    "severity_code": 0,
+    "ml_probability": 78.45,
+    "ml_risk_level": "LOW"
+  },
+  "combined_risk": {
+    "travel_safe": "YES",
+    "combined_recommendation": "✅ Location safe - travel allowed"
+  }
+}
+```
+
+***
+
+## 🛠️ Future Enhancements
+
+- Multi-language support
+- Mobile app development (Flutter/React Native)
+- Real-time traffic data integration
+- Police/Hospital location proximity analysis
+- Historical accident trend analysis
+- User feedback loop for model retraining
+- Cloud deployment (AWS/GCP/Azure)
+- Advanced geospatial clustering
+
+***
+
+## 📝 License
+
+This project is open-source and available under the **MIT License**.
+
+***
+
+## 👥 Contributors
+
+**Project Leader:** Biswajit Sow  
+**Team:** AI/ML Development Team  
+**Institution:**UEM
+
+
+
+
