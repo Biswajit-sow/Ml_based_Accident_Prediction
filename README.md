@@ -121,7 +121,7 @@ Develop a production-ready ML-powered application that:
 - **Framework:** Flask (Python)
 - **ML Libraries:** scikit-learn, XGBoost, joblib
 - **Data Processing:** pandas, NumPy
-- **Geospatial:** Distance-based hotspot analysis
+- **Geospatial:** DBSCAN Clustering,Distance-based hotspot analysis
 - **API:** RESTful with CORS support
 
 ### **Frontend**
